@@ -118,7 +118,7 @@ class Updater(val sUpdate: SUpdate)
             if (checkResult)
             {
                 // Getting its infos
-                val fileURL = URL((sUpdate.serverUrl + (if (sUpdate.serverUrl.endsWith("/")) "" else "/") + FILES_FOLDER + "/" + fileInfos.fileRelativePath).replace(" ".toRegex(), "%20"))
+                val fileURL = URL((sUpdate.serverUrl + (if (sUpdate.serverUrl.endsWith("/")) "" else "/") + FILES_FOLDER + "/" + fileInfos.fileRelativePath).replace(" ".toRegex(), "%20").replace("#".toRegex(), "%23").replace("^".toRegex(),"%5E").replace("|","%7C"))
                 val localFile = File(sUpdate.outputFolder, fileInfos.fileRelativePath)
 
                 // Adding them to the filesToDownload map
@@ -280,7 +280,7 @@ class Updater(val sUpdate: SUpdate)
             if (sUpdate.applicationManager.applications[i].isServerRequired)
             {
                 // Sending a check application request to the server
-                response = sUpdate.serverRequester.sendPostRequest("server/check/application/" + applicationName.replace(" ".toRegex(), "%20"), CheckResponse::class.java)
+                response = sUpdate.serverRequester.sendPostRequest("server/check/application/" + applicationName.replace(" ".toRegex(), "%20").replace("#".toRegex(), "%23").replace("^".toRegex(),"%5E").replace("|","%7C"), CheckResponse::class.java)
 
                 // If the response is a string (so its the raw response because the JSON parse failed)
                 if (response is String)
@@ -317,7 +317,7 @@ class Updater(val sUpdate: SUpdate)
     private fun createFileList(): List<FileInfos>
     {
         // Sending a list files request to the server
-        val response = sUpdate.serverRequester.sendPostRequest("server/list/" + sUpdate.checkMethod.name.replace(" ".toRegex(), "%20"), sUpdate.checkMethod.listType)
+        val response = sUpdate.serverRequester.sendPostRequest("server/list/" + sUpdate.checkMethod.name.replace(" ".toRegex(), "%20").replace("#".toRegex(), "%23").replace("^".toRegex(),"%5E").replace("|","%7C"), sUpdate.checkMethod.listType)
 
         // If the response is a string (so its the raw response because the JSON parse failed)
         if (response is String)
@@ -334,7 +334,7 @@ class Updater(val sUpdate: SUpdate)
         val gson = Gson()
 
         // Sending a get total bytes request to the server
-        val response = sUpdate.serverRequester.sendPostRequest("server/size", SizeResponse::class.java, gson.toJson(filesToDownload).replace(" ".toRegex(), "%20").toByteArray())
+        val response = sUpdate.serverRequester.sendPostRequest("server/size", SizeResponse::class.java, gson.toJson(filesToDownload).replace(" ".toRegex(), "%20").replace("#".toRegex(), "%23").replace("^".toRegex(),"%5E").replace("|","%7C").toByteArray())
 
         // If the response is a string (so its the raw response because the JSON parse failed)
         if (response is String)
